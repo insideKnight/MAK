@@ -11,6 +11,9 @@
 ::
 ::   This script is a part of 'Microsoft_Activation_Scripts' (MAS) project.
 ::
+::   Homepage: mass grave[.]dev
+::      Email: windowsaddict@protonmail.com
+::
 ::============================================================================
 
 
@@ -278,16 +281,20 @@ echo:             [4] Online KMS  ^|  Windows / Office  ^|    180 Days
 echo:             __________________________________________________      
 echo:
 echo:             [5] Activation Status
-echo:             [6] Extras
+echo:             [6] Troubleshoot
+echo:             [7] Extras
+echo:             [8] Help
 echo:             [0] Exit
 echo:       ______________________________________________________________
 echo:
-call :_color2 %_White% "          " %_Green% "Enter a menu option in the Keyboard [1,2,3,4,5,6,7,0] :"
+call :_color2 %_White% "          " %_Green% "Enter a menu option in the Keyboard [1,2,3,4,5,6,7,8,0] :"
 choice /C:123456780 /N
 set _erl=%errorlevel%
 
 if %_erl%==9 exit /b
-if %_erl%==6 goto:Extras
+if %_erl%==8 start %mas%troubleshoot.html & goto :MainMenu
+if %_erl%==7 goto:Extras
+if %_erl%==6 setlocal & call :troubleshoot      & cls & endlocal & goto :MainMenu
 if %_erl%==5 setlocal & call :_Check_Status_wmi & cls & endlocal & goto :MainMenu
 if %_erl%==4 setlocal & call :KMSActivation     & cls & endlocal & goto :MainMenu
 if %_erl%==3 setlocal & call :KMS38Activation   & cls & endlocal & goto :MainMenu
@@ -314,6 +321,8 @@ echo:
 echo:             [2] Extract $OEM$ Folder
 echo:
 echo:             [3] Activation Status [vbs]
+echo:
+echo:             [4] Download Genuine Windows / Office
 echo:             __________________________________________________      
 echo:                                                                     
 echo:             [0] Go to Main Menu
@@ -324,6 +333,7 @@ choice /C:12340 /N
 set _erl=%errorlevel%
 
 if %_erl%==5 goto :MainMenu
+if %_erl%==4 start %mas%genuine-installation-media.html & goto :Extras
 if %_erl%==3 setlocal & call :_Check_Status_vbs & cls & endlocal & goto :Extras
 if %_erl%==2 goto:Extract$OEM$
 if %_erl%==1 setlocal & call :change_edition    & cls & endlocal & goto :Extras
@@ -573,6 +583,7 @@ echo:
 echo PowerShell is not working. Aborting...
 echo If you have applied restrictions on Powershell then undo those changes.
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto dk_done
 )
 
@@ -822,6 +833,7 @@ call :dk_color %Red% "Changing Windows Region To USA          [Failed]"
 
 if not exist %SystemRoot%\system32\ClipUp.exe (
 call :dk_color %Red% "Checking ClipUp.exe File                [Not found, aborting the process]"
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 goto :dl_final
 )
 
@@ -982,6 +994,7 @@ call :dk_color %Blue% "At the time of writing this, HWID Activation was not supp
 call :dk_color %Blue% "Use KMS38 Activation option."
 ) else (
 if not defined error call :dk_color %Blue% "%_fixmsg%"
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 )
 )
 
@@ -1373,7 +1386,7 @@ set error=1
 
 reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform\Plugins\Objects\msft:rm/algorithm/hwid/4.0" /f ba02fed39662 /d %nul% || (
 call :dk_color %Red% "Checking SPP Registry Key               [Incorrect ModuleId Found]"
-call :dk_color %Blue% "Possibly Caused By Gaming Spoofers."
+call :dk_color %Blue% "Possibly Caused By Gaming Spoofers. Help: %mas%troubleshoot"
 set error=1
 set showfix=1
 )
@@ -1807,6 +1820,7 @@ echo:
 echo PowerShell is not working. Aborting...
 echo If you have applied restrictions on Powershell then undo those changes.
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto dk_done
 )
 
@@ -2136,10 +2150,12 @@ if !errorlevel! NEQ 0 cscript //nologo %windir%\system32\slmgr.vbs /rilc %nul%
 echo:
 if not defined error (
 call :dk_color %Green% "Office is permanently activated."
+echo Help: %mas%troubleshoot
 ) else (
 call :dk_color %Red% "Some errors were detected."
 if not defined ierror if not defined showfix if not defined serv_cor if not defined serv_cste call :dk_color %Blue% "%_fixmsg%"
 echo:
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 )
 
 goto :dk_done
@@ -3099,6 +3115,7 @@ echo:
 echo PowerShell is not working. Aborting...
 echo If you have applied restrictions on Powershell then undo those changes.
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto dk_done
 )
 
@@ -3330,6 +3347,7 @@ if %_wmic% EQU 0 for /f "tokens=2 delims==" %%a in ('%psc% "(([WMISEARCHER]'SELE
 
 if not defined app (
 call :dk_color %Red% "Checking Installed GVLK Activation ID   [Not Found] Aborting..."
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 goto :dk_done
 )
 
@@ -3384,6 +3402,7 @@ goto :k_final
 
 if not exist %SystemRoot%\system32\ClipUp.exe (
 call :dk_color %Red% "Checking ClipUp.exe File                [Not found, aborting the process]"
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 goto :k_final
 )
 
@@ -3501,6 +3520,7 @@ goto :k_final
 
 call :dk_color %Red% "Activation Failed"
 if not defined error call :dk_color %Blue% "%_fixmsg%"
+call :dk_color2 %Blue% "Check this page for help" %_Yellow% " %mas%troubleshoot"
 
 ::========================================================================================================================================
 
@@ -6749,7 +6769,7 @@ call :Clear-KMS-Cache
 
 if not [%Act_OK%]==[1] (
 echo.
-echo In case of any issues, contact with us!
+echo In case of any issues, check https://mass%-%grave.dev/troubleshoot
 )
 
 if defined _unattended exit /b
@@ -7304,6 +7324,9 @@ exit /b
 ::============================================================================
 ::
 ::   This script is a part of 'Microsoft_Activation_Scripts' (MAS) project.
+::
+::   Homepage: mass grave[.]dev
+::      Email: windowsaddict@protonmail.com
 ::
 ::============================================================================
 
@@ -8744,6 +8767,7 @@ echo:             [3] SFC Scannow
 echo:                                                                      
 echo:             [4] Fix WMI
 echo:             [5] Fix Licensing
+echo:             [6] Fix WPA Registry
 echo:             ___________________________________________________
 echo:
 echo:             [0] %_exitmsg%
@@ -8754,6 +8778,7 @@ choice /C:1234560 /N
 set _erl=%errorlevel%
 
 if %_erl%==7 exit /b
+if %_erl%==6 start %mas%fix-wpa-registry.html &goto at_menu
 if %_erl%==5 goto:retokens
 if %_erl%==4 goto:fixwmi
 if %_erl%==3 goto:sfcscan
@@ -9820,6 +9845,7 @@ if not defined applist (
 %eline%
 echo Activation IDs not found. Aborting...
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto ced_done
 )
 )
@@ -9868,6 +9894,7 @@ cmd /c exit /b !errorlevel!
 echo DISM command failed [Error Code - 0x!=ExitCode!]
 echo OS Edition was not detected properly. Aborting...
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto ced_done
 )
 
@@ -9885,6 +9912,7 @@ echo:
 echo PowerShell is not working. Aborting...
 echo If you have applied restrictions on Powershell then undo those changes.
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto ced_done
 )
 
@@ -10008,6 +10036,7 @@ if not defined key (
 echo [%targetedition% ^| %winbuild%]
 echo Unable to get product key from pkeyhelper.dll
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto ced_done
 )
 
@@ -10066,6 +10095,7 @@ echo:
 call :dk_color %Gray% "Reboot is required to properly change the Edition."
 ) else (
 call :dk_color %Red% "[Unsuccessful] [Error Code: 0x!=ExitCode!]"
+echo Check this page for help. %mas%troubleshoot
 )
 )
 
@@ -10077,6 +10107,7 @@ echo:
 timeout /t 3 %nul1%
 echo:
 call :dk_color %Blue% "Incase of errors, you must restart your system before trying again."
+echo Check this page for help. %mas%troubleshoot
 )
 %line%
 
@@ -10115,6 +10146,7 @@ if %_stg%==0 (set stage=) else (set stage=-StageCurrent)
 %psc% "$f=[io.file]::ReadAllText('!_batp!') -split ':cbsxml\:.*';& ([ScriptBlock]::Create($f[1])) -SetEdition %targetedition% %stage%;"
 echo:
 call :dk_color %Blue% "Incase of errors, you must restart your system before trying again."
+echo Check this page for help. %mas%troubleshoot
 %line%
 
 goto ced_done
@@ -10141,6 +10173,7 @@ if not defined key (
 echo [%targetedition% ^| %winbuild%]
 echo Unable to get product key from pkeyhelper.dll
 echo:
+echo Check this page for help. %mas%troubleshoot
 goto ced_done
 )
 
@@ -10164,6 +10197,7 @@ echo DISM /online /Set-Edition:%targetedition% /ProductKey:%key% /AcceptEula
 DISM /online /Set-Edition:%targetedition% /ProductKey:%key% /AcceptEula
 
 call :dk_color %Blue% "You must restart the system at this stage."
+echo Help: %mas%troubleshoot
 
 ::========================================================================================================================================
 
